@@ -6,10 +6,19 @@
 import sys
 import subprocess
 import socket
+import random
 
 interface = "wlan0"
 sensorTag=1
 sensor_data=100
+mySocket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+host_IP='127.0.0.1'
+host_port=1234  
+mySocket.connect((host_IP,host_port))
+
+
+
+
 # You can add or change the functions to parse the properties of each AP (cell)
 # below. They take one argument, the bunch of text describing one cell in iwlist
 # scan and return a property of that cell.
@@ -132,49 +141,54 @@ def print_cells(cells):
 
 def main():
     """Pretty prints the output of iwlist scan into a table"""
-    
-    cells=[[]]
-    parsed_cells=[]
+    while True:
+        cells=[[]]
+        parsed_cells=[]
 
-    proc = subprocess.Popen(["iwlist", interface, "scan"],stdout=subprocess.PIPE, universal_newlines=True)
-    out, err = proc.communicate()
+        proc = subprocess.Popen(["iwlist", interface, "scan"],stdout=subprocess.PIPE, universal_newlines=True)
+        out, err = proc.communicate()
 
-    for line in out.split("\n"):
-        cell_line = match(line,"Cell ")
-        if cell_line != None:
-            cells.append([])
-            line = cell_line[-27:]
-        cells[-1].append(line.rstrip())
+        for line in out.split("\n"):
+            cell_line = match(line,"Cell ")
+            if cell_line != None:
+                cells.append([])
+                line = cell_line[-27:]
+            cells[-1].append(line.rstrip())
 
-    cells=cells[1:]
+        cells=cells[1:]
 
-    for cell in cells:
-        parsed_cells.append(parse_cell(cell))
-   # print (type(parsed_cells[0]['Signal']))
-   # print (parsed_cells[0]['Signal'])
-    #sort_cells(parsed_cells)
-    Rss_SignalLevel_Current=int(float(parsed_cells[0]['Signal'][0:3]))
-    print(type(Rss_SignalLevel_Current))
-    print(Rss_SignalLevel_Current)
-   #print(rules)
-   #print_cells(parsed_cells)
-    mySocket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-   #except socket.error:
-   #print("Failed to Create Socket")
-   #sys.exit()
-    host_IP='127.0.0.1'
-    host_port=1234  
-    mySocket.connect((host_IP,host_port))
-    message='000'+str(sensorTag)+'000'+str(Rss_SignalLevel_Current)+'000'+str(sensor_data)
-   #try:
-    mySocket.sendall(message)
-   #except socket.error:
-   #print("Failed to Send")
-   #sys.exit()
+        for cell in cells:
+            parsed_cells.append(parse_cell(cell))
+       # print (type(parsed_cells[0]['Signal']))
+       # print (parsed_cells[0]['Signal'])
+        #sort_cells(parsed_cells)
+        Rss_SignalLevel_Current=int(float(parsed_cells[0]['Signal'][0:3]))
+       # print(type(Rss_SignalLevel_Current))
+        print(Rss_SignalLevel_Current)
+        parsed_cells=[]
+        sensor_data=random.randint(100,110)
+        message='000'+str(sensorTag)+'000'+str(Rss_SignalLevel_Current)+'000'+str(sensor_data)
+        mySocket.sendall(message)
+        print("Message sent successfully!!")
 
-   #data=mySocket.recv(1000)
-   #print("The pinged message is " + data)
+	#except socket.error:
+       #print("Failed to Send")
+       #sys.exit()
 
+       #data=mySocket.recv(1000)
+       #print("The pinged message is " + data)
+              
+       # print (type(parsed_cells[0]['Signal']))
+       # print (parsed_cells[0]['Signal'])
+        #sort_cells(.0.0.1'
+        
+       #try:
+       #print(rules)
+       #print_cells(parsed_cells)
+        
+       #except socket.error:
+       #print("Failed to Create Socket")
+       #sys.exit()
 main()
 
 
