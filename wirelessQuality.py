@@ -5,9 +5,11 @@
 
 import sys
 import subprocess
+import socket
 
 interface = "wlan0"
-
+sensorTag=1
+sensor_data=100
 # You can add or change the functions to parse the properties of each AP (cell)
 # below. They take one argument, the bunch of text describing one cell in iwlist
 # scan and return a property of that cell.
@@ -116,7 +118,7 @@ def print_table(table):
     
     for line in justified_table:
         for el in line:
-            print el,
+            print (el,)
         print
 
 def print_cells(cells):
@@ -150,16 +152,28 @@ def main():
         parsed_cells.append(parse_cell(cell))
    # print (type(parsed_cells[0]['Signal']))
    # print (parsed_cells[0]['Signal'])
-    sort_cells(parsed_cells)
-    signalLevel=parsed_cells[0]['Signal'][0:3]
-    print(signalLevel)
+    #sort_cells(parsed_cells)
+    Rss_SignalLevel_Current=int(float(parsed_cells[0]['Signal'][0:3]))
+    print(type(Rss_SignalLevel_Current))
+    print(Rss_SignalLevel_Current)
+   #print(rules)
+   #print_cells(parsed_cells)
+    mySocket=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+   #except socket.error:
+   #print("Failed to Create Socket")
+   #sys.exit()
+    host_IP='127.0.0.1'
+    host_port=1234  
+    mySocket.connect((host_IP,host_port))
+    message='000'+str(sensorTag)+'000'+str(Rss_SignalLevel_Current)+'000'+str(sensor_data)
+   #try:
+    mySocket.sendall(message)
+   #except socket.error:
+   #print("Failed to Send")
+   #sys.exit()
 
-
-    #print(rules)
-
-   # print_cells(parsed_cells)
-    
-
+   #data=mySocket.recv(1000)
+   #print("The pinged message is " + data)
 
 main()
 
