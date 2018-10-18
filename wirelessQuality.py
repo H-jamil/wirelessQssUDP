@@ -7,6 +7,8 @@ import sys
 import subprocess
 import socket
 import random
+import time
+
 
 interface = "wlan0"
 sensorTag=1
@@ -140,14 +142,15 @@ def print_cells(cells):
     print_table(table)
 
 def main():
-    """Pretty prints the output of iwlist scan into a table"""
+    packetSerialNo=0
     while True:
+        
         cells=[[]]
         parsed_cells=[]
 
         proc = subprocess.Popen(["iwlist", interface, "scan"],stdout=subprocess.PIPE, universal_newlines=True)
         out, err = proc.communicate()
-
+        rateTime=0.1
         for line in out.split("\n"):
             cell_line = match(line,"Cell ")
             if cell_line != None:
@@ -167,10 +170,11 @@ def main():
         print(Rss_SignalLevel_Current)
         parsed_cells=[]
         sensor_data=random.randint(100,110)
-        message='000'+str(sensorTag)+'000'+str(Rss_SignalLevel_Current)+'000'+str(sensor_data)
+        message='%000'+str(sensorTag)+'000'+str(Rss_SignalLevel_Current)+'000'+str(sensor_data)+'000'+str(packetSerialNo)+'%'
         mySocket.sendall(message)
-        print("Message sent successfully!!")
-
+        packetSerialNo=packetSerialNo+1
+        print("Message sent successfully with packet sequence no!!")
+        time.sleep(rateTime)
 	#except socket.error:
        #print("Failed to Send")
        #sys.exit()
