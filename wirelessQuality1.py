@@ -13,7 +13,7 @@ interface = "wlan0"
 sensorTag=2
 sensor_data=75
 mySocket=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-host_IP='10.88.105.222'
+host_IP='172.20.10.4'
 host_port=5005  
 #mySocket.connect((host_IP,host_port))
 rateTime=1
@@ -23,7 +23,7 @@ def main():
     while True:
         
 
-        p1=subprocess.Popen(['iwlist',interface,'scan'],stdout=subprocess.PIPE)
+        p1=subprocess.Popen(['iwconfig'],stdout=subprocess.PIPE)
         #Rss_SignalLevel_Current=int(float(parsed_cells[0]['Signal'][0:3]))
         
         output=p1.communicate()[0]

@@ -12,11 +12,11 @@ import time
 interface = "wlan0"
 sensorTag=1
 sensor_data=75
-mySocket=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-host_IP='172.20.10.4'
-host_port=5005  
+#mySocket=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+#host_IP='172.20.10.4'
+#host_port=5005  
 #mySocket.connect((host_IP,host_port))
-rateTime=1
+rateTime=2
 
 def main():
     packetSerialNo=0
@@ -27,21 +27,20 @@ def main():
         #Rss_SignalLevel_Current=int(float(parsed_cells[0]['Signal'][0:3]))
         
         output=p1.communicate()[0]
-        #print(type(output))
-
+        #print((output))
         string_output=output.decode('utf8')
-        index_signal=string_output.find("Signal level")
-        Rss_SignalLevel_Current=int(string_output[index_signal+13:index_signal+16])
+        
+        #Rss_SignalLevel_Current=int(string_output[index_signal+13:index_signal+16])
        # print(type(Rss_SignalLevel_Current))
-        print(Rss_SignalLevel_Current)
+        #print(Rss_SignalLevel_Current)
         #parsed_cells=[]
 	#sensorTag=random.randint(1,5)    
         sensor_data=random.randint(100,110)
-        message='%000'+str(sensorTag)+'000'+str(Rss_SignalLevel_Current)+'000'+str(sensor_data)+'000'+str(packetSerialNo)+'%'
+        #message='%000'+str(sensorTag)+'000'+str(Rss_SignalLevel_Current)+'000'+str(sensor_data)+'000'+str(packetSerialNo)+'%'
         #mySocket.sendall(message)
-        mySocket.sendto(message, (host_IP,host_port))
+        #mySocket.sendto(message, (host_IP,host_port))
         packetSerialNo=packetSerialNo+1
-        print("Message sent successfully with packet sequence no!!")
+        #print("Message sent successfully with packet sequence no!!")
         time.sleep(rateTime)
 	#except socket.error:
        #print("Failed to Send")
