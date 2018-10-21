@@ -10,7 +10,7 @@ import time
 
 
 interface = "wlan0"
-sensorTag=1
+sensorTag=2
 sensor_data=75
 mySocket=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
 host_IP='10.88.105.222'
