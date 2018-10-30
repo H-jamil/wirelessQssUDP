@@ -1,4 +1,3 @@
-
 # Jamil Hasibul
 # wireless link quality measurement
 # Parses the output of iwlist scan into a a variable
@@ -10,47 +9,61 @@ import random
 import time
 import datetime
 
-
-sensorTag=2
+messageCount=2000
+sensorTag=1
 sensor_data=75
 mySocket=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
 host_IP='10.88.105.222'
 host_port=5005  
 #mySocket.connect((host_IP,host_port))
-rateTime=0.05
+rateTime=1/120
 sendingTime=0
 def main():
-    packetSerialNo=1
-    messageCount=2000
-    print(datetime.datetime.time(datetime.datetime.now()))
-    while messageCount>0:
+    packetSerialNo=0
+    
+  	yjy   while messageCount>0:
         
 
         p1=subprocess.Popen(['iwconfig'],stdout=subprocess.PIPE)
-        
+        #Rss_SignalLevel_Current=int(float(parsed_cells[0]['Signal'][0:3]))
         
         output=p1.communicate()[0]
-        
+        #print(type(output))
 
         string_output=output.decode('utf8')
         index_signal=string_output.find("Signal level")
         Rss_SignalLevel_Current=int(string_output[index_signal+13:index_signal+16])
-       
+       # print(type(Rss_SignalLevel_Current))
         print(Rss_SignalLevel_Current)
-          
+        #parsed_cells=[]
+	#sensorTag=random.randint(1,5)    
         sensor_data=random.randint(100,110)
         message='%###'+str(sensorTag)+'###'+str(Rss_SignalLevel_Current)+'###'+str(sensor_data)+'###'+str(packetSerialNo)+'###'+str(datetime.datetime.time(datetime.datetime.now()))+'%'
-        
+        #mySocket.sendall(message)
         mySocket.sendto(message, (host_IP,host_port))
         packetSerialNo=packetSerialNo+1
         print("Message sent successfully with packet sequence no!!")
-        messageCount-=1
-	time.sleep(rateTime)
-	
-       
+        time.sleep(rateTime)
+	#except socket.error:
+       #print("Failed to Send")
+       #sys.exit()
+
+       #data=mySocket.recv(1000)
+       #print("The pinged message is " + data)
+              
+       # print (type(parsed_cells[0]['Signal']))
+       # print (parsed_cells[0]['Signal'])
+        #sort_cells(.0.0.1'
+        
+       #try:
+       #print(rules)
+       #print_cells(parsed_cells)
+        
+       #except socket.error:
+       #print("Failed to Create Socket")
+       #sys.exit()
 main()
-print(datetime.datetime.time(datetime.datetime.now()))
-mySocket.sendto("bye", (host_IP,host_port))
+
 
 
 
